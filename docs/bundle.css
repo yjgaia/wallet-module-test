@@ -249,6 +249,7 @@ button.contained .material-loading-spinner > svg > circle {
   background-color: var(--page-bg-color);
 }
 body {
+  min-height: 100vh;
   color: var(--paragraph-text-color);
   font-family: Söhne;
   font-size: 18px;
