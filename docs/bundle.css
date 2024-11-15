@@ -251,6 +251,7 @@ button.contained .material-loading-spinner > svg > circle {
 html,
 body {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 body {
   color: var(--paragraph-text-color);
