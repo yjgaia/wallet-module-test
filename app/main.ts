@@ -53,6 +53,12 @@ const metadata = {
 
   new Button({
     type: ButtonType.Contained,
+    title: "Login",
+    onClick: () => WalletLoginManager.login(),
+  }).appendTo(BodyNode);
+
+  new Button({
+    type: ButtonType.Contained,
     title: "Logout",
     onClick: () => WalletLoginManager.logout(),
   }).appendTo(BodyNode);
