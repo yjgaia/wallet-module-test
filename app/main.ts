@@ -1,21 +1,14 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { createAppKit } from "@reown/appkit";
-import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { SupabaseConnector } from "@common-module/supabase";
 import {
-  createSIWEConfig,
-  formatMessage,
-  type SIWECreateMessageArgs,
-  type SIWESession,
-  type SIWEVerifyMessageArgs,
-} from "@reown/appkit-siwe";
+  WalletLoginConfig,
+  WalletLoginManager,
+} from "@common-module/wallet-login";
 import { mainnet } from "@reown/appkit/networks";
-import { createPublicClient, http } from "viem";
 import ParsingNFTDataABI from "./ParsingNFTData.json" with {
   type: "json",
 };
-import { SupabaseConnector } from "@common-module/supabase";
-import { WalletLoginConfig, WalletLoginManager } from "@common-module/wallet-login";
 
 const projectId = "7538ca3cec20504b06a3338d0e53b028";
 
@@ -41,9 +34,18 @@ const metadata = {
     networks: [mainnet],
   });
 
-  //WalletLoginManager.on("sessionChanged", (walletAddress) => {
-  //  console.log("Wallet Address:", walletAddress);
-  //});
+  console.log(
+    WalletLoginManager.isLoggedIn,
+    WalletLoginManager.getWalletAddress(),
+  );
+
+  WalletLoginManager.on("loginStatusChanged", (isLoggedIn) => {
+    if (isLoggedIn) {
+      console.log("Wallet Address:", WalletLoginManager.getWalletAddress());
+    } else {
+      console.log("Logged Out");
+    }
+  });
 
   new Button({
     type: ButtonType.Contained,
@@ -54,13 +56,13 @@ const metadata = {
   new Button({
     type: ButtonType.Contained,
     title: "Login",
-    onClick: () => WalletLoginManager.login(),
+    onClick: () => WalletLoginManager.signIn(),
   }).appendTo(BodyNode);
 
   new Button({
     type: ButtonType.Contained,
     title: "Logout",
-    onClick: () => WalletLoginManager.logout(),
+    onClick: () => WalletLoginManager.signOut(),
   }).appendTo(BodyNode);
 
   const result = await WalletLoginManager.readContract({
