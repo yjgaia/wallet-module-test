@@ -1,6 +1,6 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { WalletConnectionManager } from "@common-module/wallet";
+import { WalletSessionManager } from "@common-module/wallet";
 import {
   createSIWEConfig,
   formatMessage,
@@ -93,20 +93,25 @@ const BASE_URL = "http://localhost:8080";
 (async () => {
   console.log("Start Test");
 
-  WalletConnectionManager.init({
+  WalletSessionManager.init({
     projectId,
     metadata,
     networks: [mainnet],
     //siweConfig,
   });
 
+  WalletSessionManager.on("sessionChanged", (walletAddress) => {
+    console.log("Wallet Address:", walletAddress);
+  });
+
   new Button({
     type: ButtonType.Contained,
     title: "Open Modal",
-    onClick: () => WalletConnectionManager.openModal(),
+    onClick: () => WalletSessionManager.openModal(),
   }).appendTo(BodyNode);
 
-  const result = await WalletConnectionManager.readContract({
+  const result = await WalletSessionManager.readContract({
+    chainId: 1,
     address: "0x06f98E2E91E64103d612243a151750d14e5EDacC",
     abi: ParsingNFTDataABI.abi,
     functionName: "getERC721BalanceList_OneToken",
