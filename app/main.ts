@@ -1,13 +1,6 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { createAppKit } from "@reown/appkit";
-import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import ParsingNFTDataABI from "./ParsingNFTData.json" with {
-  type: "json",
-};
-import { SiweMessage } from "siwe";
+import { WalletConnectionManager } from "@common-module/wallet";
 import {
   createSIWEConfig,
   formatMessage,
@@ -15,18 +8,13 @@ import {
   type SIWESession,
   type SIWEVerifyMessageArgs,
 } from "@reown/appkit-siwe";
+import { mainnet } from "@reown/appkit/networks";
+import ParsingNFTDataABI from "./ParsingNFTData.json" with {
+  type: "json",
+};
 
 const projectId = "7538ca3cec20504b06a3338d0e53b028";
 
-export const networks = [mainnet];
-
-// 2. Set up Wagmi adapter
-const wagmiAdapter = new WagmiAdapter({
-  projectId,
-  networks,
-});
-
-// 3. Configure the metadata
 const metadata = {
   name: "AppKit",
   description: "AppKit Example",
@@ -85,7 +73,8 @@ const siweConfig = createSIWEConfig({
     formatMessage(args, address),
 
   getNonce: async () => { //This is only an example, substitute it with your actual nonce getter.
-    const nonce = "0f3c11af88662c90529dc2b8382ad56c507c06d64c9c365144e0937f00a11359";
+    const nonce =
+      "0f3c11af88662c90529dc2b8382ad56c507c06d64c9c365144e0937f00a11359";
     if (!nonce) {
       throw new Error("Failed to get nonce!");
     }
@@ -99,35 +88,25 @@ const siweConfig = createSIWEConfig({
   },
 });
 
-// 3. Create the modal
-const modal = createAppKit({
-  adapters: [wagmiAdapter],
-  networks: [mainnet],
-  metadata,
-  projectId,
-  features: {
-    analytics: true, // Optional - defaults to your Cloud configuration
-  },
-  siweConfig: siweConfig,
-});
-
 const BASE_URL = "http://localhost:8080";
 
 (async () => {
   console.log("Start Test");
 
+  WalletConnectionManager.init({
+    projectId,
+    metadata,
+    networks: [mainnet],
+    //siweConfig,
+  });
+
   new Button({
     type: ButtonType.Contained,
     title: "Open Modal",
-    onClick: () => modal.open(),
+    onClick: () => WalletConnectionManager.openModal(),
   }).appendTo(BodyNode);
 
-  const client = createPublicClient({
-    chain: mainnet,
-    transport: http(),
-  });
-
-  const result = await client.readContract({
+  const result = await WalletConnectionManager.readContract({
     address: "0x06f98E2E91E64103d612243a151750d14e5EDacC",
     abi: ParsingNFTDataABI.abi,
     functionName: "getERC721BalanceList_OneToken",
