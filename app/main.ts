@@ -65,6 +65,23 @@ const metadata = {
     onClick: () => WalletLoginManager.signOut(),
   }).appendTo(BodyNode);
 
+  new Button({
+    type: ButtonType.Contained,
+    title: "Test Transaction",
+    onClick: async () => {
+      await WalletLoginManager.writeContract({
+        chainId: 1,
+        address: "0x06f98E2E91E64103d612243a151750d14e5EDacC",
+        abi: ParsingNFTDataABI.abi,
+        functionName: "getERC721BalanceList_OneToken",
+        args: [
+          "0x134590ACB661Da2B318BcdE6b39eF5cF8208E372",
+          ["0xbB22b6F3CE72A5Beb3CC400d9b6AF808A18E0D4c"],
+        ],
+      });
+    },
+  }).appendTo(BodyNode);
+
   const result = await WalletLoginManager.readContract({
     chainId: 1,
     address: "0x06f98E2E91E64103d612243a151750d14e5EDacC",
