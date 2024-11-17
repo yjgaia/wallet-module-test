@@ -1,17 +1,7 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { SupabaseConnector } from "@common-module/supabase";
-import {
-  WalletLoginConfig,
-  WalletLoginManager,
-} from "@common-module/wallet-login";
 import { createAppKit } from "@reown/appkit";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import {
-  createSIWEConfig,
-  formatMessage,
-  SIWECreateMessageArgs,
-} from "@reown/appkit-siwe";
 import { mainnet } from "@reown/appkit/networks";
 import { createPublicClient, http } from "viem";
 import ParsingNFTDataABI from "./ParsingNFTData.json" with {
@@ -112,7 +102,7 @@ const wagmiAdapter = new WagmiAdapter({
   networks,
 });
 
-const siweConfig = createSIWEConfig({
+/*const siweConfig = createSIWEConfig({
   getMessageParams: async () => ({
     domain: window.location.host,
     uri: window.location.origin,
@@ -146,7 +136,7 @@ const siweConfig = createSIWEConfig({
     return (result.address && result.chainId) ? result : null;
   },
   signOut: async () => true,
-});
+});*/
 
 // 3. Create the modal
 const modal = createAppKit({
@@ -155,9 +145,9 @@ const modal = createAppKit({
   metadata,
   projectId,
   features: {
-    analytics: true, // Optional - defaults to your Cloud configuration
+    //analytics: true, // Optional - defaults to your Cloud configuration
   },
-  siweConfig: siweConfig,
+  //siweConfig: siweConfig,
 });
 
 const BASE_URL = "http://localhost:8080";
@@ -165,11 +155,11 @@ const BASE_URL = "http://localhost:8080";
 (async () => {
   console.log("Start Test");
 
-  WalletLoginConfig.supabaseConnector = new SupabaseConnector(
+  /*WalletLoginConfig.supabaseConnector = new SupabaseConnector(
     "https://dhzxulywizygtdficytt.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRoenh1bHl3aXp5Z3RkZmljeXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAxMTIxNDUsImV4cCI6MjA0NTY4ODE0NX0.xUd8nqcT2aVn1j4x8c-pRbDcFSaIGtkn7SAcmKleBms",
     WalletLoginManager,
-  );
+  );*/
 
   new Button({
     type: ButtonType.Contained,
