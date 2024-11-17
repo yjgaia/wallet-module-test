@@ -78,7 +78,10 @@
     "test",
     "typechain-types",
     "scripts",
-    "service-worker"
+    "service-worker",
+    "legacy",
+    "./webpack.config.ts",
+    "./webpack.config.prod.ts",
   ],
   "ts-node": {
     "transpileOnly": true,
