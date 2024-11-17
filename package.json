@@ -5,12 +5,14 @@
   },
   "type": "module",
   "dependencies": {
-    "@common-module/wallet-login": "^0.2.1",
+    "@common-module/wallet-login": "^0.2.2",
+    "@gaiaprotocol/ui-preset": "^0.0.1",
     "@wagmi/connectors": "^5.4.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "@types/webpack": "^5.28.5",
+    "buffer": "^6.0.3",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "less": "^4.2.0",

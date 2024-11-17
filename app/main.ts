@@ -1,63 +1,39 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { createConfig, http } from "@wagmi/core";
-import { mainnet, sepolia } from "@wagmi/core/chains";
-import { metaMask, walletConnect } from "@wagmi/connectors";
-import ParsingNFTDataABI from "./ParsingNFTData.json" with {
-  type: "json",
-};
-import { connect, readContract } from "@wagmi/core";
-
-const projectId = "7538ca3cec20504b06a3338d0e53b028";
-
-const config = createConfig({
-  chains: [mainnet, sepolia],
-  connectors: [
-    walletConnect({
-      projectId,
-    }),
-    metaMask(),
-  ],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-  },
-});
+import { SupabaseConnector } from "@common-module/supabase";
+import {
+  WalletLoginConfig,
+  WalletLoginManager,
+} from "@common-module/wallet-login";
+import { GaiaUIPreset } from "@gaiaprotocol/ui-preset";
+import { mainnet } from "@wagmi/core/chains";
 
 (async () => {
   console.log("Start Test");
 
-  new Button({
-    type: ButtonType.Contained,
-    title: "WalletConnect",
-    onClick: () => {
-      connect(config, {
-        connector: walletConnect({
-          projectId,
-        }),
-      });
-    },
-  }).appendTo(BodyNode);
+  GaiaUIPreset.init();
 
-  new Button({
-    type: ButtonType.Contained,
-    title: "MetaMask",
-    onClick: () => {
-      connect(config, {
-        connector: metaMask(),
-      });
-    },
-  }).appendTo(BodyNode);
-
-  const result = await readContract(config, {
-    address: "0x06f98E2E91E64103d612243a151750d14e5EDacC",
-    abi: ParsingNFTDataABI.abi,
-    functionName: "getERC721BalanceList_OneToken",
-    args: [
-      "0x134590ACB661Da2B318BcdE6b39eF5cF8208E372",
-      ["0xbB22b6F3CE72A5Beb3CC400d9b6AF808A18E0D4c"],
-    ],
+  WalletLoginConfig.init({
+    chains: [mainnet as any],
+    walletConnectProjectId: "7538ca3cec20504b06a3338d0e53b028",
+    supabaseConnector: new SupabaseConnector(
+      "https://vykzkqqncxcfzflpkcsr.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5a3prcXFuY3hjZnpmbHBrY3NyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDc0OTUsImV4cCI6MjA0NDk4MzQ5NX0.UEGqZvIJ_FPxBk41C0RG4HfHahtR0yUfYVmtiZf61i0",
+      WalletLoginManager,
+    ),
   });
 
-  console.log("Result:", result);
+  WalletLoginManager.init();
+
+  new Button({
+    type: ButtonType.Contained,
+    title: "Login",
+    onClick: () => WalletLoginManager.login(),
+  }).appendTo(BodyNode);
+
+  new Button({
+    type: ButtonType.Contained,
+    title: "Logout",
+    onClick: () => WalletLoginManager.logout(),
+  }).appendTo(BodyNode);
 })();

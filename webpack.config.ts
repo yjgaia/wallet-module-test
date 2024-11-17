@@ -1,6 +1,7 @@
 import path from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import webpack from "webpack";
+import buffer from "buffer";
 
 const config: webpack.Configuration = {
   entry: {
@@ -34,12 +35,18 @@ const config: webpack.Configuration = {
     extensionAlias: {
       ".js": [".js", ".ts"],
     },
+    fallback: {
+      buffer: require.resolve("buffer"),
+    },
   },
   output: {
     filename: "[name].js",
     path: path.resolve("docs"),
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
     new MiniCssExtractPlugin({
       filename: "bundle.css",
     }),
