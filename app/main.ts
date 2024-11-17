@@ -150,7 +150,7 @@ const siweConfig = createSIWEConfig({
 
 // 3. Create the modal
 const modal = createAppKit({
-  adapters: [wagmiAdapter as any],
+  adapters: [wagmiAdapter],
   networks: [mainnet],
   metadata,
   projectId,
