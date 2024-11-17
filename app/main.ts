@@ -5,7 +5,15 @@ import {
   WalletLoginConfig,
   WalletLoginManager,
 } from "@common-module/wallet-login";
+import { createAppKit } from "@reown/appkit";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import {
+  createSIWEConfig,
+  formatMessage,
+  SIWECreateMessageArgs,
+} from "@reown/appkit-siwe";
 import { mainnet } from "@reown/appkit/networks";
+import { createPublicClient, http } from "viem";
 import ParsingNFTDataABI from "./ParsingNFTData.json" with {
   type: "json",
 };
@@ -19,7 +27,7 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/179229932"],
 };
 
-(async () => {
+/*(async () => {
   console.log("Start Test");
 
   WalletLoginConfig.supabaseConnector = new SupabaseConnector(
@@ -94,55 +102,15 @@ const metadata = {
   });
 
   console.log("Result:", result);
-})();
+})();*/
 
-/*export const networks: any = [mainnet];
+export const networks: any = [mainnet];
 
 // 2. Set up Wagmi adapter
 const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks,
 });
-
-async function getSession() {
-  const res = await fetch(BASE_URL + "/session", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (!res.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await res.json();
-  return data == "{}" ? null : data as SIWESession;
-}
-
-const verifyMessage = async ({ message, signature }: SIWEVerifyMessageArgs) => {
-  try {
-    const response = await fetch(BASE_URL + "/verify", {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify({ message, signature }),
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      return false;
-    }
-
-    const result = await response.json();
-    return result === true;
-  } catch (error) {
-    return false;
-  }
-};
 
 const siweConfig = createSIWEConfig({
   getMessageParams: async () => ({
@@ -182,7 +150,7 @@ const siweConfig = createSIWEConfig({
 
 // 3. Create the modal
 const modal = createAppKit({
-  adapters: [wagmiAdapter],
+  adapters: [wagmiAdapter as any],
   networks: [mainnet],
   metadata,
   projectId,
@@ -226,4 +194,3 @@ const BASE_URL = "http://localhost:8080";
 
   console.log("Result:", result);
 })();
-*/
