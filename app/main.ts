@@ -1,8 +1,8 @@
 import { BodyNode } from "@common-module/app";
 import { Button, ButtonType } from "@common-module/app-components";
-import { createConfig, http } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
-import { walletConnect } from "wagmi/connectors";
+import { createConfig, http } from "@wagmi/core";
+import { mainnet, sepolia } from "@wagmi/core/chains";
+import { metaMask, walletConnect } from "@wagmi/connectors";
 import ParsingNFTDataABI from "./ParsingNFTData.json" with {
   type: "json",
 };
@@ -16,6 +16,7 @@ const config = createConfig({
     walletConnect({
       projectId,
     }),
+    metaMask(),
   ],
   transports: {
     [mainnet.id]: http(),
@@ -28,12 +29,22 @@ const config = createConfig({
 
   new Button({
     type: ButtonType.Contained,
-    title: "Open Modal",
+    title: "WalletConnect",
     onClick: () => {
       connect(config, {
         connector: walletConnect({
           projectId,
         }),
+      });
+    },
+  }).appendTo(BodyNode);
+
+  new Button({
+    type: ButtonType.Contained,
+    title: "MetaMask",
+    onClick: () => {
+      connect(config, {
+        connector: metaMask(),
       });
     },
   }).appendTo(BodyNode);
