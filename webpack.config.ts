@@ -35,12 +35,18 @@ const config: webpack.Configuration = {
     extensionAlias: {
       ".js": [".js", ".ts"],
     },
+    fallback: {
+      buffer: require.resolve("buffer"),
+    },
   },
   output: {
     filename: "[name].js",
     path: path.resolve("docs"),
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
     new MiniCssExtractPlugin({
       filename: "bundle.css",
     }),
